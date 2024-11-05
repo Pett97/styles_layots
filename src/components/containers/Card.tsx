@@ -1,11 +1,12 @@
 import React, { ReactNode } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { DEFAULT_GAP, DEFAULT_PADDING, DEFAULT_RADIUS } from '../../constants/globalStyles'
-
 type CardProps = {
   title:string,
-  children:ReactNode
+  children:ReactNode,
 }
+
+
 
 function Card({title,children}:CardProps) {
   return (

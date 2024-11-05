@@ -8,7 +8,7 @@ type CheckoutButtonProps = {
 
 };
 
-function CheckoutButton({onPress,customTitle = "Checkout"}:CheckoutButtonProps){
+function CheckoutButton({onPress,customTitle = "Carrinho"}:CheckoutButtonProps){
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <Text style={styles.text}>{customTitle}</Text>

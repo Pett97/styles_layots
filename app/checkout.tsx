@@ -1,26 +1,37 @@
-import React from 'react'
-import { Alert, Text} from 'react-native'
-import FullScreen from '../components/containers/FullScreen'
-import HeaderWithTitle from '../components/headers/HeaderWithTitle'
-import Card from '../components/containers/Card'
-import PriceTag from '../components/checkout/PriceTag';
-import CheckoutButton from '../components/checkout/CheckoutButton'
+import React from 'react';
+import { Text, Alert, View } from 'react-native';
+import FullScreen from '../src/components/containers/FullScreen';
+import HeaderWithTitle from '../src/components/headers/HeaderWithTitle';
+import Card from '../src/components/containers/Card';
+import CheckoutButton from '../src/components/checkout/CheckoutButton';
+import { useLocalSearchParams } from 'expo-router';  
 
-function checkout() {
-  const handleCheckout = ()=>{
-    Alert.alert('Sucesso');
+function Checkout() {
+  const {valor,products } = useLocalSearchParams();
+
+  const totalPay = valor?parseFloat(valor as string):0;
+
+  const productList = products ? JSON.parse(products as string) : [];
+
+  const handleCheckout = () => {
+    Alert.alert('Compra Finalizada!');
   };
 
   return (
     <FullScreen center>
-      <HeaderWithTitle title='checkout!!'></HeaderWithTitle>
-      <Card title='Pagamento'>
-        <Text>Confirme seu buyagen</Text>
-        <PriceTag price={206}></PriceTag>
-        <CheckoutButton customTitle='Finalizar' onPress={handleCheckout}></CheckoutButton>
-      </Card>
+      <HeaderWithTitle title="Checkout" />
+
+      {/* Exibindo os produtos */}
+      {productList.map((product: any, index: number) => (
+        <Card key={index} title={product.title}>
+          <Text>{product.description}</Text>
+          <Text>Preço: {product.price}</Text>
+        </Card>
+      ))}
+      <View><Text>Total a Pagar {totalPay}</Text></View>
+      <CheckoutButton customTitle="Finalizar Compra" onPress={handleCheckout} />
     </FullScreen>
   );
 }
 
-export default checkout
+export default Checkout;
