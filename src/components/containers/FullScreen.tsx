@@ -18,7 +18,6 @@ function FullScreen({children,center= false}:FullScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: DEFAULT_PADDING,
     gap: DEFAULT_GAP * 2,
   },
   center: {

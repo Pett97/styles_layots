@@ -1,75 +1,105 @@
 import Scrollable from "../src/components/containers/Scrollable";
-import HeaderWithTitle from "../src/components/headers/HeaderWithTitle";
-import Card from "../src/components/containers/Card";
-import PriceTag from "../src/components/checkout/PriceTag";
-import CheckoutButton from "../src/components/checkout/CheckoutButton";
-import { router } from "expo-router";
-import { ShoopingCart } from "../src/services/shoppingCart";
+import ProductView from "../src/components/product/productView";
+import { ShoopingCart } from '../src/services/shoppingCart';
 import { Product } from "../src/services/product";
-import { Image, Text, View } from "react-native";
+import { Link, router } from "expo-router";
+import {Text, TouchableOpacity } from "react-native";
+import FullScreen from "../src/components/containers/FullScreen";
+import HeaderWithTitle from "../src/components/headers/HeaderWithTitle";
+import Button from "../src/components/button/button";
 
 interface ProductInterface {
-  title: string;
-  imagePath:string,
+  id:number,
+  imagePath: string;
+  name: string;
   description: string;
   price: number;
 }
 
 const list: ProductInterface[] = [
   {
-    title: "Computador ",
-    imagePath:require("../src/assets/pc.jpg"),
-    description:"Um PC decente para uso geral deve contar com um processador quad-core, como um Intel Core i5 ou AMD Ryzen 5, garantindo bom desempenho em multitarefas. A memória RAM de pelo menos 16 GB permite rodar aplicativos e jogos mais pesados com fluidez. Um SSD de 512 GB oferece velocidade e espaço para armazenamento rápido de arquivos. A placa de vídeo dedicada, como uma NVIDIA GTX 1660, proporciona gráficos melhores para jogos e design gráfico. Por fim, uma fonte de qualidade e um bom sistema de refrigeração garantem a durabilidade e estabilidade do equipamento.by:CHAT CPT",
+    id:1,
+    name: "Computador ",
+    imagePath: require("../src/assets/pc.jpg"),
+    description: "Um PC decente para uso geral",
     price: 1500,
   },
   {
-    title: "Mouse sem Fio ",
-    imagePath:require("../src/assets/mouse.jpg"),
+    id:2,
+    name: "Mouse sem Fio ",
+    imagePath: require("../src/assets/mouse.jpg"),
     description: "mouse sem fio para jogadores de CS2",
     price: 100,
   },
   {
-    title: "teclado retroilumiado ",
+    id:3,
+    name: "teclado retroilumiado ",
     imagePath: require("../src/assets/keyboard.jpg"),
     description: "teclado marca xingling",
     price: 200,
+  },
+  {
+    id:4,
+    name: "Mouse sem Fio 2  ",
+    imagePath: require("../src/assets/mouse.jpg"),
+    description: "mouse sem fio para jogadores de CS2",
+    price: 100,
+  },
+  {
+    id:5,
+    name: "Mouse sem Fio 3  ",
+    imagePath: require("../src/assets/mouse.jpg"),
+    description: "mouse sem fio para jogadores de CS2",
+    price: 100,
+  },
+  {
+    id:6,
+    name: "Mouse sem Fio 4",
+    imagePath: require("../src/assets/mouse.jpg"),
+    description: "mouse sem fio para jogadores de CS2",
+    price: 100,
   },
 ];
 
 export default function App() {
   const shoopingCart = new ShoopingCart();
-  const handleCheckout = () => {
-    const fullValor = shoopingCart.getFullPrice();
-    const produtos = shoopingCart.getAllProducts();
+
+  const handleCheckout = ()=>{
+    const fullValor:number = shoopingCart.getFullPrice();
+    const allProducts:Product[] = shoopingCart.getAllProducts();
     router.push({
-      pathname: "/checkout", 
-      params: {
-        valor: fullValor.toString(),
-        products: JSON.stringify(produtos)
-      },
+      pathname:"/checkoutCart",
+      params:{
+        valor:fullValor.toString(),
+        products:JSON.stringify(allProducts)
+      }
     });
+
   };
 
-  const handleAddProduct = (productName: string,descriptionProduct: string,price: number) => {
-    let product = new Product(productName, descriptionProduct, price);
+  const handleCreateProduct = (imagePath:string,productName: string,descriptionProduct: string,price: number)=>{
+    let product = new Product(imagePath,productName,descriptionProduct,price);
     shoopingCart.addNewProduct(product);
-  };
 
+    //console.log(shoopingCart.getAllProducts());
+  }
   return (
-    <Scrollable>
-      <HeaderWithTitle title="Shopp UTFPR"></HeaderWithTitle>
-
-      {list.map((product, index) => (
-        <View>
-          <Card key={index} title={product.title}>
-            <Image source={product.imagePath} style={{ width: 200, height: 200 }} />
-            <Text>{product.description}</Text>
-            <PriceTag price={product.price} />
-          </Card>
-          <CheckoutButton onPress={()=>handleAddProduct(product.title,product.description,product.price)} customTitle="Adicionar"></CheckoutButton>
-        </View>
+   <FullScreen>
+    <HeaderWithTitle title="Produtos"/>
+     <Scrollable>
+      {list.map((data) => (
+          <TouchableOpacity key={data.id} onPress={()=>handleCreateProduct(data.imagePath,data.name,data.description,data.price)}>
+            <ProductView
+            key={data.id}
+            imagePath={data.imagePath}
+            name={data.name}
+            description={data.description}
+            price={data.price}
+          />
+          </TouchableOpacity>
       ))}
-      <CheckoutButton onPress={()=>handleCheckout()}></CheckoutButton>
     </Scrollable>
+    <Button title="Carrinho" onPress={handleCheckout} ></Button>
+   </FullScreen>
   );
 }
